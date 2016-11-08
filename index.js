@@ -8,7 +8,7 @@ const reNameChar = /[\w\-\$\:@\!%]/;
 const reWordChar = /[\w\-:\$@]/;
 const reAttributeChar = /[\w\-:\$@\.]/;
 const reSpace = /[\s\u00a0]/;
-const reNonSpace = /[^\s\u00a0]/;
+const reUnquotedValue = /[^\s\u00a0\[\]\{\}=]/;
 
 /**
  * Parses given string into a node tree
@@ -16,40 +16,40 @@ const reNonSpace = /[^\s\u00a0]/;
  * @return {Node}
  */
 export default function parse(str) {
-    const stream = createStream(str.trim());
-    const root = new Node();
-    let ctx = root;
+	const stream = createStream(str.trim());
+	const root = new Node();
+	let ctx = root;
 
-    while (!stream.eol()) {
-        const operator = operators.has(stream.peek()) ? stream.next() : null;
+	while (!stream.eol()) {
+		const operator = operators.has(stream.peek()) ? stream.next() : null;
 
-        // resolve node insertion point by operator
-        switch (operator) {
-            case '+': // sibling operator
-                if (ctx.parent) {
-                    ctx = ctx.parent;
-                }
-                break;
+		// resolve node insertion point by operator
+		switch (operator) {
+			case '+': // sibling operator
+				if (ctx.parent) {
+					ctx = ctx.parent;
+				}
+				break;
 
-            case '^': // climb up operator
-                stream.backUp(1);
+			case '^': // climb up operator
+				stream.backUp(1);
 
-                // it’s perfectly valid to have multiple `^` operators
-                while (stream.peek() === '^') {
-                    if (ctx.parent) {
-                        ctx = ctx.parent;
-                    }
-                    stream.next();
-                }
-                break;
-        }
+				// it’s perfectly valid to have multiple `^` operators
+				while (stream.peek() === '^') {
+					if (ctx.parent) {
+						ctx = ctx.parent;
+					}
+					stream.next();
+				}
+				break;
+		}
 
-        const node = ctx.parent(stream);
-        ctx = ctx.appendChild(node);
-        ctx = node;
-    }
+		const node = ctx.parent(stream);
+		ctx = ctx.appendChild(node);
+		ctx = node;
+	}
 
-    return root;
+	return root;
 }
 
 /**
@@ -58,10 +58,10 @@ export default function parse(str) {
  * @return {Node}
  */
 export function consumeNode(stream) {
-    const node = new Node();
+	const node = new Node();
 	const start = stream.pos;
 
-    while (!stream.eol()) {
+	while (!stream.eol()) {
 		const ch = stream.peek();
 		if (ch === '.') {
 			stream.next();
@@ -78,7 +78,7 @@ export function consumeNode(stream) {
 		} else {
 			break;
 		}
-    }
+	}
 
 	if (start === stream.pos) {
 		throw stream.error('Unable to consume abbreviation node');
@@ -100,15 +100,14 @@ export function consumeAttributes(stream) {
 	}
 
 	const result = [];
-	stream.start = stream.pos;
 
 	while (!stream.eol()) {
 		stream.consume(reSpace);
 		if (stream.peek() === ']') { // end of attribute set
-			break;
+			return result;
 		}
 
-		const attrName = stream.consume(reWordChar);
+		const attrName = stream.consume(reAttributeChar);
 		if (!attrName) {
 			throw stream.error('Expected attribute name');
 		}
@@ -119,7 +118,7 @@ export function consumeAttributes(stream) {
 		// Check for last character: if it’s a `.`, user wants boolean attribute
 		if (attrName[attrName.length - 1] === '.') {
 			attr.name = attrName.slice(0, attrName.length - 1);
-			attr.boolean = true;
+			attr.options = {boolean: true};
 			continue;
 		}
 
@@ -136,17 +135,18 @@ export function consumeAttributes(stream) {
 
 			if (next === '{') {
 				attr.value = consumeTextNode(stream);
+				attr.options = {
+					before: '{',
+					after: '}'
+				}
 				continue;
 			}
 
-			attr.value = stream.consume(reNonSpace);
-			if (!attr.value) {
-				throw stream.error('Expected attribute value');
-			}
+			attr.value = stream.consume(reUnquotedValue);
 		}
 	}
 
-	return result;
+	throw stream.error('Expected closing "]" brace in attribute set');
 }
 
 /**
@@ -161,12 +161,12 @@ function consumeQuoted(stream) {
 		throw stream.error('Expected single or double quote for string literal');
 	}
 
-	stream.start = stream.pos;
+	const start = stream.pos;
 	if (!stream.skipQuoted(quote)) {
 		throw stream.error(`Unable to find matching ${quote} for string literal`);
 	}
 
-	return stream.string.slice(stream.start, stream.pos - 1);
+	return stream.string.slice(start, stream.pos - 1);
 }
 
 /**
@@ -180,25 +180,20 @@ function consumeTextNode(stream) {
 		throw stream.error('Expected { as a beginning of text node');
 	}
 
-	stream.start = stream.pos;
+	const start = stream.pos;
 
 	while (!stream.eol()) {
-		const ch = stream.peek();
-		if (isQuote(ch)) {
+		if (isQuote(stream.peek())) {
 			consumeQuoted(stream);
 			continue;
 		}
 
-		if (ch === '}') {
-			const result = stream.current();
-			stream.next();
-			return result;
+		if (stream.next() === '}') {
+			return stream.string.slice(start, stream.pos - 1);
 		}
-
-		stream.next();
 	}
 
-	throw stream.error('Unexpected end-of-line when consuming text node');
+	throw stream.error('Unable to find matching } for text node');
 }
 
 /**
