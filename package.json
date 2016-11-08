@@ -4,9 +4,29 @@
   "description": "Emmet standalone abbreviation parser",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
-  "keywords": ["emmet", "abbreviation"],
+  "keywords": [
+    "emmet",
+    "abbreviation"
+  ],
   "author": "Sergeyt Chikuyonok <serge.che@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.18.0",
+    "babel-register": "^6.18.0",
+    "mocha": "^3.1.2"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emmetio/abbreviation.git"
+  },
+  "bugs": {
+    "url": "https://github.com/emmetio/abbreviation/issues"
+  },
+  "homepage": "https://github.com/emmetio/abbreviation#readme"
 }
