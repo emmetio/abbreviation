@@ -73,7 +73,7 @@ export function consumeNode(stream) {
 			consumeAttributes(stream).forEach(attr => node.addAttribute(attr));
 		} else if (ch === '{') {
 			node.value = consumeTextNode(stream);
-		} else if (reNameChar.test(ch)) {
+		} else if (reNameChar.test(ch) && stream.pos === start) {
 			node.name = stream.consume(reNameChar);
 		} else {
 			break;
@@ -104,6 +104,7 @@ export function consumeAttributes(stream) {
 	while (!stream.eol()) {
 		stream.consume(reSpace);
 		if (stream.peek() === ']') { // end of attribute set
+			stream.next();
 			return result;
 		}
 
