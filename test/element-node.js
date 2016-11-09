@@ -42,6 +42,7 @@ describe('Element node', () => {
 		assert.equal(read('div[foo=bar]'), '<div foo="bar" />');
 		assert.equal(read('div.a[b=c]'), '<div class="a" b="c" />');
 		assert.equal(read('div[b=c].a'), '<div b="c" class="a" />');
+		assert.equal(read('div[a=b][c="d"]'), '<div a="b" c="d" />');
 
 		assert.equal(read('[b=c]'), '<@ b="c" />');
 		assert.equal(read('.a[b=c]'), '<@ class="a" b="c" />');

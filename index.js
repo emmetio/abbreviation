@@ -53,7 +53,7 @@ export default function parse(str) {
 }
 
 /**
- * Consumes a single node from current abbreviation string
+ * Consumes a single node from current abbreviation stream
  * @param  {StringStream} stream
  * @return {Node}
  */
@@ -70,11 +70,16 @@ export function consumeNode(stream) {
 			stream.next();
 			node.addAttribute('id', stream.consume(reWordChar));
 		} else if (ch === '[') {
-			consumeAttributes(stream).forEach(attr => node.addAttribute(attr));
+			const attrs = consumeAttributes(stream);
+			for (let i = 0, il = attrs.length; i < il; i++) {
+				node.addAttribute(attrs[i]);
+			}
 		} else if (ch === '{') {
 			node.value = consumeTextNode(stream);
 		} else if (reNameChar.test(ch) && stream.pos === start) {
 			node.name = stream.consume(reNameChar);
+		} else if (ch === '*') {
+			node.repeat = consumeRepeat(stream);
 		} else {
 			break;
 		}
@@ -88,7 +93,7 @@ export function consumeNode(stream) {
 }
 
 /**
- * Consumes attributes defined in square braces.
+ * Consumes attributes defined in square braces from given stream.
  * Example:
  * [attr col=3 title="Quoted string" selected. support={react}]
  * @param {StringStream} stream
@@ -211,6 +216,7 @@ export function consumeTextNode(stream) {
 export function consumeQuoted(stream) {
 	const quote = stream.next();
 	if (!isQuote(quote)) {
+		stream.backUp(1);
 		throw stream.error('Expected single or double quote for string literal');
 	}
 
