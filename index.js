@@ -63,6 +63,7 @@ export function consumeNode(stream) {
 
 	while (!stream.eol()) {
 		const ch = stream.peek();
+
 		if (ch === '.') {
 			stream.next();
 			node.addClass(stream.consume(reWordChar));
@@ -80,6 +81,14 @@ export function consumeNode(stream) {
 			node.name = stream.consume(reNameChar);
 		} else if (ch === '*') {
 			node.repeat = consumeRepeat(stream);
+		} else if (ch === '/') {
+			// A self-closing indicator must be at the end of non-grouping node
+			if (node.isGroup) {
+				throw stream.error('Unexpected self-closing indicator');
+			}
+			stream.next();
+			node.selfClosing = true;
+			break;
 		} else {
 			break;
 		}

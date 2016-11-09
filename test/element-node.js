@@ -70,5 +70,13 @@ describe('Element node', () => {
 		assert.equal(read('.a*10{text}'), '<@ class="a">*10text</@>');
 	});
 
+	it('self-closing', () => {
+		assert(create('div/').selfClosing);
+		assert(create('.foo/').selfClosing);
+		assert(create('.foo[bar]/').selfClosing);
+
+		assert.throws(() => create('/'), /Unexpected self\-closing indicator/);
+	});
+
 	// TODO implement forced void element
 });
