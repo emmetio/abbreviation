@@ -69,11 +69,11 @@ export function consumeNode(stream) {
 			node.addClass(stream.consume(reWordChar));
 		} else if (ch === '#') {
 			stream.next();
-			node.addAttribute('id', stream.consume(reWordChar));
+			node.setAttribute('id', stream.consume(reWordChar));
 		} else if (ch === '[') {
 			const attrs = consumeAttributes(stream);
 			for (let i = 0, il = attrs.length; i < il; i++) {
-				node.addAttribute(attrs[i]);
+				node.setAttribute(attrs[i]);
 			}
 		} else if (ch === '{') {
 			node.value = consumeTextNode(stream);
