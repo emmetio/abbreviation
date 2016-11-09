@@ -229,6 +229,22 @@ export function consumeQuoted(stream) {
 }
 
 /**
+ * Consumes node repeat token from current stream position and returns its
+ * @param  {StringStream} stream
+ * @return {Object}
+ */
+export function consumeRepeat(stream) {
+	if (stream.next() !== '*') {
+		stream.backUp(1);
+		throw stream.error('Expected * character for repeater');
+	}
+
+	const value = stream.consume(/[0-9]/);
+	// XXX think about extending repeat syntax with through numbering
+	return {count: value ? +value : null};
+}
+
+/**
  * Check if given character is a valid quote
  * @param  {String}  ch
  * @return {Boolean}

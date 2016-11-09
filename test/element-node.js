@@ -12,10 +12,12 @@ describe('Element node', () => {
 			node = create(node);
 		}
 
+		const repeat = node.repeat ? `*${node.repeat.count || ''}` : '';
+
 		if (node.name || node.attributes.length) {
 			const name = node.name || '@';
 			const output = `<${name}` + node.attributes.map(attr => ` ${attr.name}="${attr.value || ''}"`).join('');
-			return output + (node.value ? `>${node.value}</${name}>` : ' />');
+			return output + (node.value ? `>${repeat}${node.value}</${name}>` : ` />${repeat}`);
 		}
 
 		return node.value;
@@ -61,6 +63,12 @@ describe('Element node', () => {
 		assert.equal(read('.foo[b=c]{bar}'), '<@ class="foo" b="c">bar</@>');
 	});
 
-	// TODO implement repeater
+	it('repeated', () => {
+		assert.equal(read('div.foo*3'), '<div class="foo" />*3');
+		assert.equal(read('.a[b=c]*10'), '<@ class="a" b="c" />*10');
+		assert.equal(read('.a*10[b=c]'), '<@ class="a" b="c" />*10');
+		assert.equal(read('.a*10{text}'), '<@ class="a">*10text</@>');
+	});
+
 	// TODO implement forced void element
 });
