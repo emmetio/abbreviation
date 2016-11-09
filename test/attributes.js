@@ -29,6 +29,11 @@ describe('Attributes', () => {
 		assert.deepEqual(attrs[0], {name: 'a', value: 'b'});
 		assert.deepEqual(attrs[1], {name: 'c', value: ''});
 		assert.deepEqual(attrs[2], {name: 'd', value: 'e'});
+
+		attrs = parse('[a=b.c d=тест]');
+		assert.equal(attrs.length, 2);
+		assert.deepEqual(attrs[0], {name: 'a', value: 'b.c'});
+		assert.deepEqual(attrs[1], {name: 'd', value: 'тест'});
 	});
 
 	it('with quoted values', () => {
@@ -53,15 +58,11 @@ describe('Attributes', () => {
 
 	it('boolean', () => {
 		const options = {boolean: true};
-		const attrs = parse('[a. b. c.d e.f.g.]');
+		const attrs = parse('[a. b.]');
 
-		assert.equal(attrs.length, 4);
+		assert.equal(attrs.length, 2);
 		assert.deepEqual(attrs[0], {name: 'a', options});
 		assert.deepEqual(attrs[1], {name: 'b', options});
-
-		// somewhere in MS world dots are used in attribute names
-		assert.deepEqual(attrs[2], {name: 'c.d'});
-		assert.deepEqual(attrs[3], {name: 'e.f.g', options});
 	});
 
 	it('React expressions', () => {
@@ -71,6 +72,19 @@ describe('Attributes', () => {
 		assert.equal(attrs.length, 2);
 		assert.deepEqual(attrs[0], {name: 'foo', value: '1 + 2', options});
 		assert.deepEqual(attrs[1], {name: 'bar', value: 'fn(1, "foo")', options});
+	});
+
+	it('default attributes', () => {
+		let attrs = parse('[a.b]');
+		assert.equal(attrs.length, 1);
+		assert.deepEqual(attrs[0], {name: null, value: 'a.b'});
+
+		attrs = parse('[a.b "c=d" foo=bar ./test.html]');
+		assert.equal(attrs.length, 4);
+		assert.deepEqual(attrs[0], {name: null, value: 'a.b'});
+		assert.deepEqual(attrs[1], {name: null, value: 'c=d'});
+		assert.deepEqual(attrs[2], {name: 'foo', value: 'bar'});
+		assert.deepEqual(attrs[3], {name: null, value: './test.html'});
 	});
 
 	it('errors', () => {

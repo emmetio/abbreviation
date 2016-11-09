@@ -6,9 +6,9 @@ import createStream from './lib/string-stream';
 const operators = new Set(['>', '^', '+']);
 const reNameChar = /[\w\-\$\:@\!%]/;
 const reWordChar = /[\w\-:\$@]/;
-const reAttributeChar = /[\w\-:\$@\.]/;
-const reSpace = /[\s\u00a0]/;
-const reUnquotedValue = /[^\s\u00a0\[\]\{\}=]/;
+const reAttributeName = /^[\w\-:\$@]+\.?$/;
+const reSpaceChar = /[\s\u00a0]/;
+const reUnquotedValueChar = /[^\s\u00a0\[\]\{\}='"]/;
 
 /**
  * Parses given string into a node tree
@@ -102,23 +102,37 @@ export function consumeAttributes(stream) {
 	const result = [];
 
 	while (!stream.eol()) {
-		stream.consume(reSpace);
-		if (stream.peek() === ']') { // end of attribute set
+		stream.consume(reSpaceChar);
+		const next = stream.peek();
+
+		if (next === ']') { // end of attribute set
 			stream.next();
 			return result;
 		}
 
-		const attrName = stream.consume(reAttributeChar);
-		if (!attrName) {
-			throw stream.error('Expected attribute name');
+		if (isQuote(next)) {
+			// Found quoted default value
+			result.push({name: null, value: consumeQuoted(stream)});
+			continue;
 		}
 
-		const attr = {name: attrName};
+		// Consume next word: could be either attribute name or unquoted default value
+		const nextWord = stream.consume(reUnquotedValueChar);
+		if (!nextWord) {
+			throw stream.error('Expected attribute name or default value');
+		}
+
+		if (!reAttributeName.test(nextWord)) {
+			result.push({name: null, value: nextWord});
+			continue;
+		}
+
+		const attr = {name: nextWord};
 		result.push(attr);
 
 		// Check for last character: if it’s a `.`, user wants boolean attribute
-		if (attrName[attrName.length - 1] === '.') {
-			attr.name = attrName.slice(0, attrName.length - 1);
+		if (nextWord[nextWord.length - 1] === '.') {
+			attr.name = nextWord.slice(0, nextWord.length - 1);
 			attr.options = {boolean: true};
 			continue;
 		}
@@ -143,7 +157,7 @@ export function consumeAttributes(stream) {
 				continue;
 			}
 
-			attr.value = stream.consume(reUnquotedValue);
+			attr.value = stream.consume(reUnquotedValueChar);
 		}
 	}
 
