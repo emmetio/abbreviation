@@ -3,7 +3,6 @@
 import Node from './lib/node';
 import createStream from './lib/string-stream';
 
-const operators = new Set(['>', '^', '+']);
 const reNameChar = /[\w\-\$\:@\!%]/;
 const reWordChar = /[\w\-:\$@]/;
 const reAttributeName = /^[\w\-:\$@]+\.?$/;
@@ -19,34 +18,72 @@ export default function parse(str) {
 	const stream = createStream(str.trim());
 	const root = new Node();
 	let ctx = root;
+	let groupStack = [];
 
 	while (!stream.eol()) {
-		const operator = operators.has(stream.peek()) ? stream.next() : null;
+		const ch = stream.peek();
+		if (ch === '(') { // start of group
+			// The grouping node should be detached to properly handle
+			// out-of-bounds `^` operator. Node will be attached right on group end
+			const node = new Node();
+			const groupCtx = groupStack.length ? last(groupStack)[0] : ctx;
+			groupStack.push([node, groupCtx, stream.pos]);
+			ctx = node;
+			stream.next();
+			continue;
+		} else if (ch === ')') { // end of group
+			const lastGroup = groupStack.pop();
+			if (!lastGroup) {
+				throw stream.error('Unexpected ")" group end');
+			}
 
-		// resolve node insertion point by operator
-		switch (operator) {
-			case '+': // sibling operator
-				if (ctx.parent) {
-					ctx = ctx.parent;
+			const node = lastGroup[0];
+			ctx = lastGroup[1];
+			stream.next();
+
+			// a group can have a repeater
+			if (stream.peek() === '*') {
+				node.repeat = consumeRepeat(stream);
+				ctx.appendChild(node);
+			} else {
+				// move all children of group into parent node
+				while (node.firstChild) {
+					ctx.appendChild(node.firstChild);
 				}
-				break;
+				// for convenience, groups can be joined with optional `+` operator
+				stream.eat('+');
+			}
 
-			case '^': // climb up operator
-				stream.backUp(1);
-
-				// it’s perfectly valid to have multiple `^` operators
-				while (stream.peek() === '^') {
-					if (ctx.parent) {
-						ctx = ctx.parent;
-					}
-					stream.next();
-				}
-				break;
+			continue;
 		}
 
-		const node = ctx.parent(stream);
-		ctx = ctx.appendChild(node);
-		ctx = node;
+		const node = consumeNode(stream);
+		ctx.appendChild(node);
+
+		switch (stream.peek()) {
+			case '':  // end-of-line
+			case '+': // sibling operator
+				stream.next();
+				continue;
+
+			case '>': // child operator
+				stream.next();
+				ctx = node;
+				continue;
+
+			case '^': // climb-up operator
+				// it’s perfectly valid to have multiple `^` operators
+				while (stream.next() === '^') {
+					ctx = ctx.parent || ctx;
+				}
+				stream.backUp(1);
+				continue;
+		}
+	}
+
+	if (groupStack.length) {
+		stream.pos = groupStack.pop()[2];
+		throw stream.error('Expected group close');
 	}
 
 	return root;
@@ -95,7 +132,7 @@ export function consumeNode(stream) {
 	}
 
 	if (start === stream.pos) {
-		throw stream.error('Unable to consume abbreviation node');
+		throw stream.error(`Unable to consume abbreviation node, unexpected ${stream.peek()}`);
 	}
 
 	return node;
@@ -260,4 +297,13 @@ export function consumeRepeat(stream) {
  */
 function isQuote(ch) {
 	return ch === '"' || ch === "'";
+}
+
+/**
+ * Returns last item from given array
+ * @param  {Array} arr
+ * @return {*}
+ */
+function last(arr) {
+	return arr[arr.length - 1];
 }
