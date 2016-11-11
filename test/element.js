@@ -77,6 +77,4 @@ describe('Element node', () => {
 
 		assert.throws(() => create('/'), /Unexpected self\-closing indicator/);
 	});
-
-	// TODO implement forced void element
 });

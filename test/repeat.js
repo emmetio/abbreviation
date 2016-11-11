@@ -14,8 +14,4 @@ describe('Repeat', () => {
 		assert.deepEqual(parse('*123foo'), {count: 123});
 		assert.deepEqual(parse('*'), {count: null});
 	});
-
-	it('error', () => {
-		assert.throws(() => parse('123'), /Expected \* character for repeater/);
-	});
 });
