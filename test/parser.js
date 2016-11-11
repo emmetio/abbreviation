@@ -2,7 +2,7 @@
 
 const assert = require('assert');
 require('babel-register');
-const parse = require('../').default;
+const parse = require('../index').default;
 
 describe('Parser', () => {
 	function abbr(str) {
