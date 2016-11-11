@@ -2,11 +2,11 @@
 
 const assert = require('assert');
 require('babel-register');
-const parser = require('../');
 const createStream = require('../lib/string-stream').default;
+const consumeTextNode = require('../lib/parser/text').default;
 
 describe('Text node', () => {
-	const parse = str => parser.consumeTextNode(createStream(str));
+	const parse = str => consumeTextNode(createStream(str));
 
 	it('parse', () => {
 		assert.equal(parse('{a b c}'), 'a b c');

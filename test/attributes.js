@@ -2,11 +2,11 @@
 
 const assert = require('assert');
 require('babel-register');
-const parser = require('../');
+const consumeAttributes = require('../lib/parser/attribute').default;
 const createStream = require('../lib/string-stream').default;
 
 describe('Attributes', () => {
-	const parse = str => parser.consumeAttributes(createStream(str));
+	const parse = str => consumeAttributes(createStream(str));
 
 	it('names', () => {
 		let attrs = parse('[a]');

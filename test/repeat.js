@@ -2,11 +2,11 @@
 
 const assert = require('assert');
 require('babel-register');
-const parser = require('../');
+const consumeRepeat = require('../lib/parser/repeat').default;
 const createStream = require('../lib/string-stream').default;
 
 describe('Repeat', () => {
-	const parse = str => parser.consumeRepeat(createStream(str));
+	const parse = str => consumeRepeat(createStream(str));
 
 	it('basic', () => {
 		assert.deepEqual(parse('*3'), {count: 3});

@@ -2,11 +2,11 @@
 
 const assert = require('assert');
 require('babel-register');
-const parser = require('../');
+const consumeElement = require('../lib/parser/element').default;
 const createStream = require('../lib/string-stream').default;
 
 describe('Element node', () => {
-	const create = str => parser.consumeNode(createStream(str));
+	const create = str => consumeElement(createStream(str));
 	const read = node => {
 		if (typeof node === 'string') {
 			node = create(node);
