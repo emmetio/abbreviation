@@ -1,6 +1,6 @@
 {
   "name": "@emmet/abbreviation",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Emmet standalone abbreviation parser",
   "main": "dist/abbreviation.cjs.js",
   "jsnext:main": "dist/abbreviation.es.js",
