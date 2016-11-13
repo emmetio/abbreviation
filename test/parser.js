@@ -3,21 +3,11 @@
 const assert = require('assert');
 require('babel-register');
 const parse = require('../lib/parser').default;
+const stringify = require('./assets/stringify').default;
 
 describe('Parser', () => {
 	function abbr(str) {
-		return parse(str).children.map(stringify).join('');
-	}
-
-	function stringify(node) {
-		const children = node.children.map(stringify).join('');
-		if (node.isGroup) {
-			return `(${children})${node.repeat ? '*' + node.repeat.count : ''}`;
-		}
-		const attr = node.attributes.map(a => ` ${a.name}="${a.value || ''}"`).join('');
-		const repeat = node.repeat ? `*${node.repeat}` : '';
-		const name = node.name || '@';
-		return `<${node.name}${repeat}${attr}>${node.value || ''}${children}</${node.name}>`
+		return stringify(parse(str));
 	}
 
 	it('basic abbreviations', () => {
