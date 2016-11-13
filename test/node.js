@@ -156,6 +156,27 @@ describe('Node', () => {
 		assert.equal(b.getAttribute('selected').options.boolean, true);
 	});
 
+	it('deep clone', () => {
+		const a = new Node('a', [{name: 'foo', 'value': 'bar'}]);
+		const b = new Node('b', [{name: 'bar', 'value': 'baz'}]);
+		a.appendChild(b);
+
+		const a2 = a.clone(true);
+		const b2 = a2.firstChild;
+
+		a2.setAttribute('foo', 'bar2');
+		b2.setAttribute('bar', 'baz2');
+
+		assert(a !== a2);
+		assert(b !== b2);
+
+		assert.equal(a.name, a2.name);
+		assert.equal(a.getAttribute('foo').value, 'bar');
+		assert.equal(a2.getAttribute('foo').value, 'bar2');
+		assert.equal(b.getAttribute('bar').value, 'baz');
+		assert.equal(b2.getAttribute('bar').value, 'baz2');
+	});
+
 	it('walk', () => {
 		const root = new Node();
 		const a = new Node('a');
