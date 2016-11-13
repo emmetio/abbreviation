@@ -67,6 +67,18 @@ describe('Node', () => {
 
 		// remove detached node: do not throw error
 		c.remove();
+
+		// insert before
+		root.insertBefore(c, a);
+		assert.equal(root.children.length, 3);
+		assert.equal(root.firstChild, b);
+		assert.equal(b.previous, null);
+		assert.equal(b.next, c);
+		assert.equal(a.previous, c);
+		assert.equal(a.next, null);
+		assert.equal(c.previous, b);
+		assert.equal(c.next, a);
+		assert.equal(c.parent, root);
 	});
 
 	it('attributes', () => {
