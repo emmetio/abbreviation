@@ -100,7 +100,17 @@ describe('Node', () => {
 			{name: 'a', value: 'b'}
 		]);
 
+		a.replaceAttribute('foo', 'foo2', 'baz2');
+		// replace non-exiting attribute
+		a.replaceAttribute('bar', 'bar2', 'baz2');
+		assert.deepEqual(a.attributes, [
+			{name: 'foo2', value: 'baz2'},
+			{name: 'a', value: 'b'}
+		]);
+
+		// remove non-existing attribute
 		a.removeAttribute('foo');
+		a.removeAttribute('foo2');
 		assert.equal(a.attributes.length, 1);
 		assert.deepEqual(a.attributes, [{name: 'a', value: 'b'}]);
 
