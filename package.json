@@ -9,7 +9,8 @@
     "build": "npm run build:cjs && npm run build:es",
     "build:cjs": "rollup -o dist/abbreviation.cjs.js -f cjs ./index.js",
     "build:es": "rollup -o dist/abbreviation.es.js -f es ./index.js",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "watch": "rollup -w -o dist/abbreviation.cjs.js -f cjs ./index.js"
   },
   "keywords": [
     "emmet",
@@ -21,7 +22,8 @@
     "babel-plugin-transform-es2015-modules-commonjs": "^6.18.0",
     "babel-register": "^6.18.0",
     "mocha": "^3.1.2",
-    "rollup": "^0.36.3"
+    "rollup": "^0.36.3",
+    "rollup-watch": "^2.5.0"
   },
   "directories": {
     "test": "test"
