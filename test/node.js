@@ -90,6 +90,10 @@ describe('Node', () => {
 		assert(!a.hasAttribute('bar'));
 		assert.deepEqual(a.attributes, [{name: 'foo', value: 'bar'}]);
 
+		assert.equal(a.getAttribute('foo').name, 'foo');
+		assert.equal(a.getAttribute('foo').value, 'bar');
+		assert.equal(a.getAttribute('foo'), a.getAttribute({name: 'foo'}));
+
 		a.setAttribute('foo', 'baz');
 		assert.deepEqual(a.attributes, [{name: 'foo', value: 'baz'}]);
 		assert.equal(a.getAttribute('foo').value, 'baz');
