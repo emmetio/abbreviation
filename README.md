@@ -4,7 +4,7 @@ Reference parser implementation for [Emmet](http://emmet.io) project. Parser tak
 
 Note that this module *does not* produce a tree that can be used for final HTML output: the tree might miss tag names, predefined attributes, resolved snippets and so on. The goal of this parser is to be a basic embeddable building block for projects that wish to utilize Emmet abbreviations syntax.
 
-If you need a complete HTML or CSS abbreviation expander, you should use `@emmetio/html-abbreviation` or `@emmetio/css-abbreviation` instead.
+If you need a complete HTML or CSS abbreviation expander, you should transform parsed abbreviation tree via [`@emmetio/html-transform`](https://github.com/emmetio/html-transform) or `@emmetio/css-tansform` as well.
 
 ## Usage
 
