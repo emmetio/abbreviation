@@ -87,6 +87,13 @@ describe('Attributes', () => {
 		assert.deepEqual(attrs[3], {name: null, value: './test.html'});
 	});
 
+	it('tabstops as unquoted values', () => {
+		let attrs = parse('[name=${1} value=${2:test}]');
+		assert.equal(attrs.length, 2);
+		assert.deepEqual(attrs[0], {name: 'name', value: '${1}'});
+		assert.deepEqual(attrs[1], {name: 'value', value: '${2:test}'});
+	});
+
 	it('errors', () => {
 		assert.throws(() => parse('[a'), /Expected closing "]" brace/);
 		assert.throws(() => parse('[a="foo]'), /Unable to find matching "/);
