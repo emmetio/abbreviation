@@ -9,7 +9,7 @@
     "build": "npm run build:cjs && npm run build:es",
     "build:cjs": "rollup -o dist/abbreviation.cjs.js -f cjs ./index.js",
     "build:es": "rollup -o dist/abbreviation.es.js -f es ./index.js",
-    "prepublish": "npm run build",
+    "prepublish": "npm run test && npm run build",
     "watch": "rollup -w -o dist/abbreviation.cjs.js -f cjs ./index.js"
   },
   "keywords": [
