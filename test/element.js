@@ -60,7 +60,16 @@ describe('Element node', () => {
 		assert.equal(parse('div/'), '<div />');
 		assert.equal(parse('.foo/'), '<? class="foo" />');
 		assert.equal(parse('.foo[bar]/'), '<? class="foo" bar="" />');
+		assert.equal(parse('.foo/*3'), '<?*3 class="foo" />');
+		assert.equal(parse('.foo*3/'), '<?*3 class="foo" />');
 
 		assert.throws(() => parse('/'), /Unexpected self\-closing indicator/);
+	});
+
+	it('toString()', () => {
+		const parse = str => consumeElement(createStream(str));
+
+		assert.equal(parse('div.foo*3').toString(), 'div[class="foo"]*3');
+		assert.equal(parse('.foo[bar]/'), '[class="foo" bar]/');
 	});
 });
