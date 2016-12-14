@@ -88,42 +88,33 @@ describe('Node', () => {
 		a.setAttribute('foo', 'bar');
 		assert(a.hasAttribute('foo'));
 		assert(!a.hasAttribute('bar'));
-		assert.deepEqual(a.attributes, [{name: 'foo', value: 'bar'}]);
+		assert.deepEqual(a.attributesMap, {foo: 'bar'});
 
 		assert.equal(a.getAttribute('foo').name, 'foo');
 		assert.equal(a.getAttribute('foo').value, 'bar');
 		assert.equal(a.getAttribute('foo'), a.getAttribute({name: 'foo'}));
 
 		a.setAttribute('foo', 'baz');
-		assert.deepEqual(a.attributes, [{name: 'foo', value: 'baz'}]);
+		assert.deepEqual(a.attributesMap, {foo: 'baz'});
 		assert.equal(a.getAttribute('foo').value, 'baz');
 
 		a.setAttribute('a', 'b');
-		assert.deepEqual(a.attributes, [
-			{name: 'foo', value: 'baz'},
-			{name: 'a', value: 'b'}
-		]);
+		assert.deepEqual(a.attributesMap, {foo: 'baz', a: 'b'});
 
 		a.replaceAttribute('foo', 'foo2', 'baz2');
 		// replace non-exiting attribute
 		a.replaceAttribute('bar', 'bar2', 'baz2');
-		assert.deepEqual(a.attributes, [
-			{name: 'foo2', value: 'baz2'},
-			{name: 'a', value: 'b'}
-		]);
+		assert.deepEqual(a.attributesMap, {foo2: 'baz2', a: 'b'});
 
 		// remove non-existing attribute
 		a.removeAttribute('foo');
 		a.removeAttribute('foo2');
 		assert.equal(a.attributes.length, 1);
-		assert.deepEqual(a.attributes, [{name: 'a', value: 'b'}]);
+		assert.deepEqual(a.attributesMap, {a: 'b'});
 
 		const b = new Node('b', [{name: 'foo', value: 'bar'}, 'a']);
 		assert.equal(b.attributes.length, 2);
-		assert.deepEqual(b.attributes, [
-			{name: 'foo', value: 'bar'},
-			{name: 'a', value: null}
-		]);
+		assert.deepEqual(b.attributesMap, {foo: 'bar', a: null});
 	});
 
 	it('class names', () => {
@@ -131,18 +122,18 @@ describe('Node', () => {
 		assert.equal(a.attributes.length, 0);
 
 		a.addClass('foo');
-		assert.deepEqual(a.attributes, [{name: 'class', value: 'foo'}]);
+		assert.deepEqual(a.attributesMap, {'class': 'foo'});
 
 		a.addClass('foo');
 		a.addClass('bar');
 		assert(a.hasClass('foo'));
 		assert(a.hasClass('bar'));
 		assert(!a.hasClass('baz'));
-		assert.deepEqual(a.attributes, [{name: 'class', value: 'foo bar'}]);
+		assert.deepEqual(a.attributesMap, {'class': 'foo bar'});
 
 		a.removeClass('foo');
 		a.removeClass('baz');
-		assert.deepEqual(a.attributes, [{name: 'class', value: 'bar'}]);
+		assert.deepEqual(a.attributesMap, {'class': 'bar'});
 
 		const b = new Node('b', [{name: 'class', value: 'foo bar'}]);
 		assert(b.hasClass('foo'));
@@ -155,18 +146,18 @@ describe('Node', () => {
 			new Attribute('selected', null, {boolean: true})
 		]);
 
-		assert.deepEqual(a.attributes, [
-			{name: 'class', value: 'foo bar'},
-			{name: 'selected', value: null}
-		]);
+		assert.deepEqual(a.attributesMap, {
+			'class': 'foo bar',
+			'selected': 'selected'
+		});
 
 		const b = a.clone();
 
 		assert.equal(b.name, 'a');
-		assert.deepEqual(b.attributes, [
-			{name: 'class', value: 'foo bar'},
-			{name: 'selected', value: null}
-		]);
+		assert.deepEqual(b.attributesMap, {
+			'class': 'foo bar',
+			'selected': 'selected'
+		});
 
 		assert(b.getAttribute('selected').options.boolean);
 
@@ -175,8 +166,8 @@ describe('Node', () => {
 		const opt = a.getAttribute('selected').options;
 		opt.boolean = false;
 
-		assert.equal(a.getAttribute('class').valueOf(), 'foo');
-		assert.equal(b.getAttribute('class').valueOf(), 'foo bar');
+		assert.equal(a.getAttribute('class').value, 'foo');
+		assert.equal(b.getAttribute('class').value, 'foo bar');
 
 		assert.equal(a.getAttribute('selected').options.boolean, false);
 		assert.equal(b.getAttribute('selected').options.boolean, true);
