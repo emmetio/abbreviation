@@ -19,22 +19,33 @@ describe('Node', () => {
 		root.appendChild(a);
 		assert.equal(root.children.length, 1);
 		assert.equal(root.firstChild, a);
+		assert.equal(root.lastChild, a);
 		assert.equal(a.parent, root);
 		assert.equal(a.previous, null);
 		assert.equal(a.next, null);
+
+		assert.equal(a.childIndex, 0);
+		assert.equal(b.childIndex, -1);
+		assert.equal(c.childIndex, -1);
 
 		// ensure children are making up a linked list
 		root.appendChild(b);
 		assert.equal(root.children.length, 2);
 		assert.equal(root.firstChild, a);
+		assert.equal(root.lastChild, b);
 		assert.equal(a.previous, null);
 		assert.equal(a.next, b);
 		assert.equal(b.previous, a);
 		assert.equal(b.next, null);
 
+		assert.equal(a.childIndex, 0);
+		assert.equal(b.childIndex, 1);
+		assert.equal(c.childIndex, -1);
+
 		root.appendChild(c);
 		assert.equal(root.children.length, 3);
 		assert.equal(root.firstChild, a);
+		assert.equal(root.lastChild, c);
 		assert.equal(a.previous, null);
 		assert.equal(a.next, b);
 		assert.equal(b.previous, a);
@@ -42,10 +53,15 @@ describe('Node', () => {
 		assert.equal(c.previous, b);
 		assert.equal(c.next, null);
 
+		assert.equal(a.childIndex, 0);
+		assert.equal(b.childIndex, 1);
+		assert.equal(c.childIndex, 2);
+
 		// re-append existing child to change children order
 		root.appendChild(a);
 		assert.equal(root.children.length, 3);
 		assert.equal(root.firstChild, b);
+		assert.equal(root.lastChild, a);
 		assert.equal(b.previous, null);
 		assert.equal(b.next, c);
 		assert.equal(c.previous, b);
@@ -53,10 +69,15 @@ describe('Node', () => {
 		assert.equal(a.previous, c);
 		assert.equal(a.next, null);
 
+		assert.equal(a.childIndex, 2);
+		assert.equal(b.childIndex, 0);
+		assert.equal(c.childIndex, 1);
+
 		// remove node and maintain a linked list
 		c.remove();
 		assert.equal(root.children.length, 2);
 		assert.equal(root.firstChild, b);
+		assert.equal(root.lastChild, a);
 		assert.equal(b.previous, null);
 		assert.equal(b.next, a);
 		assert.equal(a.previous, b);
@@ -64,6 +85,10 @@ describe('Node', () => {
 		assert.equal(c.previous, null);
 		assert.equal(c.next, null);
 		assert.equal(c.parent, null);
+
+		assert.equal(a.childIndex, 1);
+		assert.equal(b.childIndex, 0);
+		assert.equal(c.childIndex, -1);
 
 		// remove detached node: do not throw error
 		c.remove();
@@ -79,6 +104,10 @@ describe('Node', () => {
 		assert.equal(c.previous, b);
 		assert.equal(c.next, a);
 		assert.equal(c.parent, root);
+
+		assert.equal(a.childIndex, 2);
+		assert.equal(b.childIndex, 0);
+		assert.equal(c.childIndex, 1);
 	});
 
 	it('attributes', () => {
