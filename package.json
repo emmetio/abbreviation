@@ -7,10 +7,9 @@
   "scripts": {
     "test": "mocha",
     "build": "npm run build:cjs && npm run build:es",
-    "build:cjs": "rollup -o dist/abbreviation.cjs.js -f cjs ./index.js",
-    "build:es": "rollup -o dist/abbreviation.es.js -f es ./index.js",
-    "prepublish": "npm run test && npm run build",
-    "watch": "rollup -w -o dist/abbreviation.cjs.js -f cjs ./index.js"
+    "build:cjs": "rollup -c -o dist/abbreviation.cjs.js -f cjs ./index.js",
+    "build:es": "rollup -c -o dist/abbreviation.es.js -f es ./index.js",
+    "prepublish": "npm run test && npm run build"
   },
   "keywords": [
     "emmet",
@@ -22,8 +21,7 @@
     "babel-plugin-transform-es2015-modules-commonjs": "^6.18.0",
     "babel-register": "^6.18.0",
     "mocha": "^3.1.2",
-    "rollup": "^0.36.3",
-    "rollup-watch": "^2.5.0"
+    "rollup": "^0.41.1"
   },
   "directories": {
     "test": "test"
@@ -35,5 +33,8 @@
   "bugs": {
     "url": "https://github.com/emmetio/abbreviation/issues"
   },
-  "homepage": "https://github.com/emmetio/abbreviation#readme"
+  "homepage": "https://github.com/emmetio/abbreviation#readme",
+  "dependencies": {
+    "@emmetio/stream-reader": "^1.0.0"
+  }
 }

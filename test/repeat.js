@@ -1,12 +1,12 @@
 'use strict';
 
 const assert = require('assert');
+const StreamReader = require('@emmetio/stream-reader');
 require('babel-register');
 const consumeRepeat = require('../lib/parser/repeat').default;
-const createStream = require('../lib/string-stream').default;
 
 describe('Repeat', () => {
-	const parse = str => consumeRepeat(createStream(str));
+	const parse = str => consumeRepeat(new StreamReader(str));
 
 	it('basic', () => {
 		assert.deepEqual(parse('*3'), {count: 3});

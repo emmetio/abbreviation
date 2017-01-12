@@ -1,12 +1,12 @@
 'use strict';
 
 const assert = require('assert');
+const StreamReader = require('@emmetio/stream-reader');
 require('babel-register');
 const consumeAttributes = require('../lib/parser/attribute').default;
-const createStream = require('../lib/string-stream').default;
 
 describe('Attributes', () => {
-	const parse = str => consumeAttributes(createStream(str));
+	const parse = str => consumeAttributes(new StreamReader(str));
 
 	it('names', () => {
 		let attrs = parse('[a]');

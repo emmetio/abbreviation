@@ -1,13 +1,13 @@
 'use strict';
 
 const assert = require('assert');
+const StreamReader = require('@emmetio/stream-reader');
 require('babel-register');
 const consumeElement = require('../lib/parser/element').default;
-const createStream = require('../lib/string-stream').default;
 const stringify = require('./assets/stringify').default;
 
 describe('Element node', () => {
-	const parse = str => stringify(consumeElement(createStream(str)));
+	const parse = str => stringify(consumeElement(new StreamReader(str)));
 
 	it('simple', () => {
 		assert.equal(parse('div'), '<div></div>');
@@ -67,7 +67,7 @@ describe('Element node', () => {
 	});
 
 	it('toString()', () => {
-		const parse = str => consumeElement(createStream(str));
+		const parse = str => consumeElement(new StreamReader(str));
 
 		assert.equal(parse('div.foo*3').toString(), 'div[class="foo"]*3');
 		assert.equal(parse('.foo[bar]/'), '[class="foo" bar]/');

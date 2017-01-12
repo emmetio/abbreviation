@@ -1,12 +1,12 @@
 'use strict';
 
 const assert = require('assert');
+const StreamReader = require('@emmetio/stream-reader');
 require('babel-register');
-const createStream = require('../lib/string-stream').default;
 const consumeTextNode = require('../lib/parser/text').default;
 
 describe('Text node', () => {
-	const parse = str => consumeTextNode(createStream(str));
+	const parse = str => consumeTextNode(new StreamReader(str));
 
 	it('parse', () => {
 		assert.equal(parse('{a b c}'), 'a b c');
