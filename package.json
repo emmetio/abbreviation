@@ -3,12 +3,10 @@
   "version": "0.5.0",
   "description": "Emmet standalone abbreviation parser",
   "main": "dist/abbreviation.cjs.js",
-  "jsnext:main": "dist/abbreviation.es.js",
+  "module": "dist/abbreviation.es.js",
   "scripts": {
     "test": "mocha",
-    "build": "npm run build:cjs && npm run build:es",
-    "build:cjs": "rollup -c -o dist/abbreviation.cjs.js -f cjs ./index.js",
-    "build:es": "rollup -c -o dist/abbreviation.es.js -f es ./index.js",
+    "build": "rollup -c",
     "prepublish": "npm run test && npm run build"
   },
   "keywords": [
