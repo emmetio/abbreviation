@@ -1,6 +1,6 @@
 'use strict';
 
-import parse from './lib/parser/index';
+import parse from './lib/parser';
 
 /**
  * Parses given abbreviation and un-rolls it into a full tree: recursively

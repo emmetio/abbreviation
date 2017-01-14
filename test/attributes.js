@@ -3,7 +3,7 @@
 const assert = require('assert');
 const StreamReader = require('@emmetio/stream-reader');
 require('babel-register');
-const consumeAttributes = require('../lib/parser/attribute').default;
+const consumeAttributes = require('../lib/attribute').default;
 
 describe('Attributes', () => {
 	const parse = str => consumeAttributes(new StreamReader(str));

@@ -33,6 +33,7 @@
   },
   "homepage": "https://github.com/emmetio/abbreviation#readme",
   "dependencies": {
+    "@emmetio/node": "^0.1.0",
     "@emmetio/stream-reader": "^1.0.0"
   }
 }

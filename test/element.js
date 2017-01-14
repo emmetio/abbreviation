@@ -3,7 +3,7 @@
 const assert = require('assert');
 const StreamReader = require('@emmetio/stream-reader');
 require('babel-register');
-const consumeElement = require('../lib/parser/element').default;
+const consumeElement = require('../lib/element').default;
 const stringify = require('./assets/stringify').default;
 
 describe('Element node', () => {

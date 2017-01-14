@@ -3,7 +3,7 @@
 const assert = require('assert');
 const StreamReader = require('@emmetio/stream-reader');
 require('babel-register');
-const consumeRepeat = require('../lib/parser/repeat').default;
+const consumeRepeat = require('../lib/repeat').default;
 
 describe('Repeat', () => {
 	const parse = str => consumeRepeat(new StreamReader(str));
