@@ -24,6 +24,7 @@ describe('Element node', () => {
 		assert.equal(parse('#'), '<? id=""></?>');
 		assert.equal(parse('#.'), '<? id="" class=""></?>');
 		assert.equal(parse('.#.'), '<? class="" id=""></?>');
+		assert.equal(parse('.a..'), '<? class="a"></?>');
 	});
 
 	it('with attributes', () => {
