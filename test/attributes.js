@@ -27,7 +27,7 @@ describe('Attributes', () => {
 		attrs = parse('[a=b c= d=e]');
 		assert.equal(attrs.length, 3);
 		assert.deepEqual(attrs[0], {name: 'a', value: 'b'});
-		assert.deepEqual(attrs[1], {name: 'c', value: ''});
+		assert.deepEqual(attrs[1], {name: 'c'});
 		assert.deepEqual(attrs[2], {name: 'd', value: 'e'});
 
 		attrs = parse('[a=b.c d=тест]');
@@ -96,8 +96,8 @@ describe('Attributes', () => {
 
 	it('errors', () => {
 		assert.throws(() => parse('[a'), /Expected closing "]" brace/);
-		assert.throws(() => parse('[a="foo]'), /Unable to find matching "/);
-		assert.throws(() => parse('[a={foo]'), /Unable to find matching \}/);
+		assert.throws(() => parse('[a="foo]'), /Unable to consume quoted string/);
+		assert.throws(() => parse('[a={foo]'), /Unable to find matching pair/);
 		assert.throws(() => parse('[a=b=c]'), /Expected attribute name/);
 	});
 });

@@ -2,6 +2,7 @@ export default {
 	entry: './index.js',
 	external: [
 		'@emmetio/stream-reader',
+		'@emmetio/stream-reader-utils',
 		'@emmetio/node'
 	],
 	targets: [

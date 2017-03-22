@@ -18,8 +18,8 @@ describe('Text node', () => {
 	});
 
 	it('errors', () => {
-		assert.throws(() => parse('{foo'), /Unable to find matching \}/);
-		assert.throws(() => parse('{foo"}'), /Unable to find matching "/);
-		assert.throws(() => parse('{foo => {}'), /Unable to find matching \}/);
+		assert.throws(() => parse('{foo'), /Unable to find matching/);
+		assert.throws(() => parse('{foo"}'), /Unable to consume quoted string/);
+		assert.throws(() => parse('{foo => {}'), /Unable to find matching/);
 	});
 });
