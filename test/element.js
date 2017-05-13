@@ -18,6 +18,7 @@ describe('Element node', () => {
 		assert.equal(parse('div.foo.bar.baz'), '<div class="foo bar baz"></div>');
 		assert.equal(parse('.foo'), '<? class="foo"></?>');
 		assert.equal(parse('#foo'), '<? id="foo"></?>');
+		assert.equal(parse('.foo_bar'), '<? class="foo_bar"></?>');
 		assert.equal(parse('#foo.bar'), '<? id="foo" class="bar"></?>');
 
 		assert.equal(parse('.'), '<? class=""></?>');
