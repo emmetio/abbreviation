@@ -19,12 +19,19 @@ function unroll(node) {
 		return;
 	}
 
-	for (let i = 1; i < node.repeat.count; i++) {
+	for (let i = 0; i < node.repeat.count; i++) {
 		const clone = node.clone(true);
-		clone.repeat.value = i;
+		clone.repeat.value = i+1;
 		clone.walk(unroll);
-		node.parent.insertBefore(clone, node);
+		if (clone.isGroup) {
+			while (clone.children.length > 0) {
+				clone.firstChild.repeat = clone.repeat;
+				node.parent.insertBefore(clone.firstChild, node);
+			}
+		} else {
+			node.parent.insertBefore(clone, node);
+		}
 	}
-
-	node.repeat.value = node.repeat.count;
+	
+	node.parent.removeChild(node);
 }
