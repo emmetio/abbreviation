@@ -26,6 +26,7 @@ describe('Parser', () => {
 			assert.equal(parse('a>((b>c)(d>e))f'), '<a><b><c></c></b><d><e></e></d><f></f></a>');
 			assert.equal(parse('a>((((b>c))))+d'), '<a><b><c></c></b><d></d></a>');
 			assert.equal(parse('a>(((b>c))*4)+d'), '<a>(<b><c></c></b>)*4<d></d></a>');
+			assert.equal(parse('(div>dl>(dt+dd)*2)'), '<div><dl>(<dt></dt><dd></dd>)*2</dl></div>');
 		});
 	});
 
