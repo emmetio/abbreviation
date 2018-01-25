@@ -97,7 +97,7 @@ describe('Attributes', () => {
 	it('errors', () => {
 		assert.throws(() => parse('[a'), /Expected closing "]" brace/);
 		assert.throws(() => parse('[a="foo]'), /Unable to consume quoted string/);
-		assert.throws(() => parse('[a={foo]'), /Unable to find matching pair/);
+		assert.throws(() => parse('[a={foo]'), /Unable to find closing/);
 		assert.throws(() => parse('[a=b=c]'), /Expected attribute name/);
 	});
 });

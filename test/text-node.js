@@ -11,15 +11,16 @@ describe('Text node', () => {
 	it('parse', () => {
 		assert.equal(parse('{a b c}'), 'a b c');
 		assert.equal(parse('{a "b c"}'), 'a "b c"');
+		assert.equal(parse('{isn\'t bad}'), 'isn\'t bad');
 		assert.equal(parse('{foo(a => {return "b"});}'), 'foo(a => {return "b"});');
-		assert.equal(parse('{foo(a => {return "b}"});}'), 'foo(a => {return "b}"});');
-		assert.equal(parse('{foo\\}bar}'), 'foo\\}bar');
+		assert.equal(parse('{foo(a => {return "b\\}"});}'), 'foo(a => {return "b}"});');
+		assert.equal(parse('{foo\\}bar}'), 'foo}bar');
+		assert.equal(parse('{foo\\{bar\\}baz}'), 'foo{bar}baz');
 		assert.equal(parse('{foo\\"}bar}'), 'foo\\"');
 	});
 
 	it('errors', () => {
-		assert.throws(() => parse('{foo'), /Unable to find matching/);
-		assert.throws(() => parse('{foo"}'), /Unable to consume quoted string/);
-		assert.throws(() => parse('{foo => {}'), /Unable to find matching/);
+		assert.throws(() => parse('{foo'), /Unable to find closing/);
+		assert.throws(() => parse('{foo => {}'), /Unable to find closing/);
 	});
 });
