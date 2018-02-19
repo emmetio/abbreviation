@@ -1,12 +1,12 @@
 export default {
-	entry: './index.js',
+	input: './index.js',
 	external: [
 		'@emmetio/stream-reader',
 		'@emmetio/stream-reader-utils',
 		'@emmetio/node'
 	],
-	targets: [
-		{format: 'cjs', dest: 'dist/abbreviation.cjs.js'},
-		{format: 'es',  dest: 'dist/abbreviation.es.js'}
+	output: [
+		{ format: 'cjs', file: 'dist/abbreviation.cjs.js' },
+		{ format: 'es',  file: 'dist/abbreviation.es.js' }
 	]
 };

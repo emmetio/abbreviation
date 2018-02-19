@@ -15,11 +15,16 @@
   ],
   "author": "Sergey Chikuyonok <serge.che@gmail.com>",
   "license": "MIT",
+  "dependencies": {
+    "@emmetio/node": "^0.1.2",
+    "@emmetio/stream-reader": "^2.2.0",
+    "@emmetio/stream-reader-utils": "^0.1.0"
+  },
   "devDependencies": {
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.18.0",
-    "babel-register": "^6.18.0",
-    "mocha": "^3.1.2",
-    "rollup": "^0.41.1"
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
+    "babel-register": "^6.26.0",
+    "mocha": "^5.0.1",
+    "rollup": "^0.56.2"
   },
   "directories": {
     "test": "test"
@@ -31,10 +36,5 @@
   "bugs": {
     "url": "https://github.com/emmetio/abbreviation/issues"
   },
-  "homepage": "https://github.com/emmetio/abbreviation#readme",
-  "dependencies": {
-    "@emmetio/node": "^0.1.2",
-    "@emmetio/stream-reader": "^2.0.0",
-    "@emmetio/stream-reader-utils": "^0.1.0"
-  }
+  "homepage": "https://github.com/emmetio/abbreviation#readme"
 }
