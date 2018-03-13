@@ -5,8 +5,13 @@ export default {
 		'@emmetio/stream-reader-utils',
 		'@emmetio/node'
 	],
-	output: [
-		{ format: 'cjs', file: 'dist/abbreviation.cjs.js' },
-		{ format: 'es',  file: 'dist/abbreviation.es.js' }
-	]
+	output: [{
+		format: 'cjs',
+		sourcemap: true,
+		file: 'dist/abbreviation.cjs.js'
+	}, {
+		format: 'es',
+		sourcemap: true,
+		file: 'dist/abbreviation.es.js'
+	}]
 };
