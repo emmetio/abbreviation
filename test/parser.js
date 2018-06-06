@@ -34,6 +34,7 @@ describe('Parser', () => {
 		it('unroll repeated elements', () => {
 			assert.equal(expand('a*2>b*3'), '<a*2@1><b*3@1></b><b*3@2></b><b*3@3></b></a><a*2@2><b*3@1></b><b*3@2></b><b*3@3></b></a>');
 			assert.equal(expand('a>(b+c)*2'), '<a><b*2@1></b><c*2@1></c><b*2@2></b><c*2@2></c></a>');
+			assert.equal(expand('a>(b+c)*2+(d+e)*2'), '<a><b*2@1></b><c*2@1></c><b*2@2></b><c*2@2></c><d*2@1></d><e*2@1></e><d*2@2></d><e*2@2></e></a>');
 		});
 	});
 });
