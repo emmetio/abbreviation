@@ -12,11 +12,12 @@ describe('Attributes', () => {
 		let attrs = parse('[a]');
 		assert.deepEqual(parse('[a]'), [{name: 'a'}]);
 
-		attrs = parse('[a b c]');
-		assert.equal(attrs.length, 3);
+		attrs = parse('[a b c [d]]');
+		assert.equal(attrs.length, 4);
 		assert.deepEqual(attrs[0], {name: 'a'});
 		assert.deepEqual(attrs[1], {name: 'b'});
 		assert.deepEqual(attrs[2], {name: 'c'});
+		assert.deepEqual(attrs[3], {name: '[d]'});
 	});
 
 	it('unquoted values', () => {
@@ -34,6 +35,10 @@ describe('Attributes', () => {
 		assert.equal(attrs.length, 2);
 		assert.deepEqual(attrs[0], {name: 'a', value: 'b.c'});
 		assert.deepEqual(attrs[1], {name: 'd', value: 'тест'});
+
+		attrs = parse('[[a]=b]');
+		assert.equal(attrs.length, 1);
+		assert.deepEqual(attrs[0], {name: '[a]', value: 'b'});
 	});
 
 	it('with quoted values', () => {
@@ -46,6 +51,10 @@ describe('Attributes', () => {
 		assert.deepEqual(attrs[0], {name: 'a', value: 'b'});
 		assert.deepEqual(attrs[1], {name: 'c', value: 'd'});
 		assert.deepEqual(attrs[2], {name: 'e', value: ''});
+
+		attrs = parse('[[a]="b"]');
+		assert.equal(attrs.length, 1);
+		assert.deepEqual(attrs[0], {name: '[a]', value: 'b'});
 	});
 
 	it('mixed quotes', () => {
