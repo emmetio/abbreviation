@@ -1,3 +1,9 @@
+# Deprecated
+
+Implementation is moved to monorepo: https://github.com/emmetio/emmet/tree/master/packages/abbreviation
+
+--
+
 # Emmet abbreviation parser [![Build Status](https://travis-ci.org/emmetio/abbreviation.svg?branch=master)](https://travis-ci.org/emmetio/abbreviation)
 
 Reference parser implementation for [Emmet](http://emmet.io) project. Parser takes an abbreviation string and produces a tree. This tree can then be analyzed, updated etc., similar to DOM tree. Use it to produce a string output afterwards.
